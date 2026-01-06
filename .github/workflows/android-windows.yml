@@ -9,6 +9,11 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: List repo files (debug)
+        run: ls -R $GITHUB_WORKSPACE
 
       - name: Set up NDK
         uses: nttld/setup-ndk@v1
@@ -17,27 +22,32 @@ jobs:
 
       - name: Build FBNeo core (Android arm64)
         run: |
-          make -C src/burn/libretro -f Makefile.libretro platform=android-arm64 -j$(nproc)
+          make -C $GITHUB_WORKSPACE/src/burn/libretro -f Makefile.libretro platform=android-arm64 -j$(nproc)
 
       - name: Upload artifact (Android)
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-android-arm64
-          path: src/burn/libretro/fbneo_libretro_android.so
+          path: $GITHUB_WORKSPACE/src/burn/libretro/fbneo_libretro_android.so
 
   build-windows-x64:
     runs-on: windows-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: List repo files (debug)
+        run: dir $env:GITHUB_WORKSPACE /s
 
       - name: Build FBNeo core (Windows x64)
         shell: bash
         run: |
-          make -C src/burn/libretro -f Makefile.libretro platform=win64 -j$(nproc)
+          make -C $GITHUB_WORKSPACE/src/burn/libretro -f Makefile.libretro platform=win64 -j$(nproc)
 
       - name: Upload artifact (Windows)
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-windows-x64
-          path: src/burn/libretro/fbneo_libretro.dll
+          path: $GITHUB_WORKSPACE/src/burn/libretro/fbneo_libretro.dll
