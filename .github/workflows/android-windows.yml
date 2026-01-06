@@ -1,7 +1,7 @@
 name: Build FBNeo Android & Windows
 
 on:
-  workflow_dispatch:   # 手动触发
+  workflow_dispatch:
 
 jobs:
   build-android-arm64:
@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up NDK
-        uses: android-actions/setup-ndk@v2
+        uses: nttld/setup-ndk@v1
         with:
           ndk-version: r23c
 
@@ -21,7 +21,7 @@ jobs:
           make -f Makefile.libretro platform=android-arm64 -j$(nproc)
 
       - name: Upload artifact (Android)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: fbneo-android-arm64
           path: src/burn/libretro/fbneo_libretro_android.so
@@ -38,7 +38,6 @@ jobs:
           mingw32-make -f Makefile.libretro platform=win64 -j%NUMBER_OF_PROCESSORS%
 
       - name: Upload artifact (Windows)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: fbneo-windows-x64
-          path: src\burn\libretro\fbneo_libretro.dll
+          name: fbneo-windows-x
