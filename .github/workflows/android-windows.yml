@@ -1,4 +1,4 @@
-name: Build FBNeo Android & Windows
+name: Build FBNeo Android
 
 on:
   workflow_dispatch:
@@ -22,32 +22,14 @@ jobs:
 
       - name: Build FBNeo core (Android arm64)
         run: |
-          make -f makefile platform=android-arm64 -j$(nproc)
+          export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
+          make -f makefile platform=android-arm64 \
+            CC=aarch64-linux-android21-clang \
+            CXX=aarch64-linux-android21-clang++ \
+            -j$(nproc)
 
       - name: Upload artifact (Android)
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-android-arm64
           path: fbneo_libretro_android.so
-
-  build-windows-x64:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: List repo files (debug)
-        run: dir $env:GITHUB_WORKSPACE /s
-
-      - name: Build FBNeo core (Windows x64)
-        shell: bash
-        run: |
-          make -f makefile.mingw platform=libretro -j$(nproc)
-
-      - name: Upload artifact (Windows)
-        uses: actions/upload-artifact@v4
-        with:
-          name: fbneo-windows-x64
-          path: fbneo_libretro.dll
