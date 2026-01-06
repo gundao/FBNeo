@@ -1,0 +1,44 @@
+name: Build FBNeo Android & Windows
+
+on:
+  workflow_dispatch:   # 手动触发
+
+jobs:
+  build-android-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up NDK
+        uses: android-actions/setup-ndk@v2
+        with:
+          ndk-version: r23c
+
+      - name: Build FBNeo core (Android arm64)
+        run: |
+          cd src/burn/libretro
+          make -f Makefile.libretro platform=android-arm64 -j$(nproc)
+
+      - name: Upload artifact (Android)
+        uses: actions/upload-artifact@v3
+        with:
+          name: fbneo-android-arm64
+          path: src/burn/libretro/fbneo_libretro_android.so
+
+  build-windows-x64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Build FBNeo core (Windows x64)
+        run: |
+          cd src\burn\libretro
+          mingw32-make -f Makefile.libretro platform=win64 -j%NUMBER_OF_PROCESSORS%
+
+      - name: Upload artifact (Windows)
+        uses: actions/upload-artifact@v3
+        with:
+          name: fbneo-windows-x64
+          path: src\burn\libretro\fbneo_libretro.dll
