@@ -22,11 +22,7 @@ jobs:
 
       - name: Build FBNeo core (Android arm64)
         run: |
-          export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
-          make -f makefile platform=android-arm64 \
-            CC=aarch64-linux-android21-clang \
-            CXX=aarch64-linux-android21-clang++ \
-            -j$(nproc)
+          make -f Makefile.libretro platform=android-arm64 -j$(nproc)
 
       - name: Upload artifact (Android)
         uses: actions/upload-artifact@v4
