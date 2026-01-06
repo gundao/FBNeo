@@ -22,13 +22,13 @@ jobs:
 
       - name: Build FBNeo core (Android arm64)
         run: |
-          make -C $GITHUB_WORKSPACE/src/burn/libretro -f Makefile.libretro platform=android-arm64 -j$(nproc)
+          make -f makefile platform=android-arm64 -j$(nproc)
 
       - name: Upload artifact (Android)
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-android-arm64
-          path: $GITHUB_WORKSPACE/src/burn/libretro/fbneo_libretro_android.so
+          path: fbneo_libretro_android.so
 
   build-windows-x64:
     runs-on: windows-latest
@@ -44,10 +44,10 @@ jobs:
       - name: Build FBNeo core (Windows x64)
         shell: bash
         run: |
-          make -C $GITHUB_WORKSPACE/src/burn/libretro -f Makefile.libretro platform=win64 -j$(nproc)
+          make -f makefile.mingw platform=libretro -j$(nproc)
 
       - name: Upload artifact (Windows)
         uses: actions/upload-artifact@v4
         with:
           name: fbneo-windows-x64
-          path: $GITHUB_WORKSPACE/src/burn/libretro/fbneo_libretro.dll
+          path: fbneo_libretro.dll
